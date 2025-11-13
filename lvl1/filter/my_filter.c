@@ -6,7 +6,7 @@
 /*   By: mnieto-m <mnieto-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 21:11:40 by mnieto-m          #+#    #+#             */
-/*   Updated: 2025/10/23 20:44:03 by mnieto-m         ###   ########.fr       */
+/*   Updated: 2025/11/05 18:03:28 by mnieto-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ ft_filter(char* buffer, char*  index)
 				write(1,"*",1);
 			i += len;
 		}
-		else//imprime si no encutra la concurrencia
+		else//imprime si no encuentra la concurrencia
 		{
 			write(1,&buffer[i],1);
 			i++;
