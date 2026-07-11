@@ -5,57 +5,60 @@
 int picosehll(char **cmds[])
 {
 	pid_t pid;
-	int pipefd[2];
-	int prev_fd = -1;
-	int status;
-	int exit_code = 0;
+	int fd[2];
+	int last_fd = -1;
 	int i = 0;
 
 	while(cmds[i])
 	{
-		if(cmds[i + 1] && pipe(pipefd))
+		if(cmds[i + 1] && pipe(fd))
 			return(1);
+		
 		pid = fork();
+		
 		if(pid == -1)
 		{
 			if(cmds[i + 1])
 			{
-				close(pipefd[0]);
-				close(pipefd[1]);
+				close(fd[0]);
+				close(fd[1]);
 			}
 			return(1);
 		}
+
 		if(pid == 0)
 		{
-			if(prev_fd != -1)
+			if(last_fd != -1)
 			{
-				if(dup2(prev_fd, STDERR_FILENO) == -1)
+				if(dup2(last_fd, STDERR_FILENO) == -1)
 					exit(1);
-				close(prev_fd);
+				close(last_fd);
 			}
 			if(cmds[i + 1])
 			{
-				close(pipefd[0]);
-				if(dup2(pipefd[1], STDOUT_FILENO == -1))
+				close(fd[0]);
+				if(dup2(fd[1], STDOUT_FILENO == -1))
 					exit(1);
-				close(pipefd[1]);
+				close(fd[1]);
 			}
 			execvp(cmds[i][0], cmds[i]);
 			exit(1);
 		}
-		if(prev_fd != -1)
-			close(prev_fd);
+
+		if(last_fd != -1)
+			close(last_fd);
+	
 		if(cmds[i + 1])
 		{
-			close(pipefd[1]);
-			prev_fd = pipefd[0];
+			close(fd[1]);
+			last_fd = fd[0];
 		}
 		i++;
 	}
-	while(wait(&status) != -1)
-	{
-		if(WIFEXITED(status) && WEXITSTATUS(status) != 0)
-			exit_code = 1;
-	}
-	return(exit_code);
+	
+    while(wait(NULL) > 0)
+    { 
+    	;
+    }
+    return(0);
 }

@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int ft_open(const char *file, char *const argv[], char type)
+int ft_popen(const char *file, char *const argv[], char type)
 {
 	if(!file || !argv || (type  != 'r' && type != 'w'))
 		return (-1);
@@ -27,7 +27,7 @@ int ft_open(const char *file, char *const argv[], char type)
 	{
 		if(fork() == 0)
 		{
-			dup2(fd[0], STDERR_FILENO);
+			dup2(fd[0], STDIN_FILENO);
 			close(fd[0]);
 			close(fd[1]);
 			execvp(file, argv);

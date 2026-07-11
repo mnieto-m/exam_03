@@ -1,6 +1,7 @@
 #include "vbc.h"
 
 char *s;
+
 void error(char c)
 {
 	if(c)
@@ -8,6 +9,7 @@ void error(char c)
 	else
 		printf("Unexpected end of file\n");
 }
+
 int ft_sum()
 {
 	int sum1 = ft_product();
