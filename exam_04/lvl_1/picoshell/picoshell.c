@@ -9,13 +9,16 @@ int picosehll(char **cmds[])
 	int last_fd = -1;
 	int i = 0;
 
+
+	//LOOP DE HASTA NULL
 	while(cmds[i])
 	{
+		//Creas unas pipe para el seiguiennte comando;
 		if(cmds[i + 1] && pipe(fd))
 			return(1);
 		
+		//Creas un proceso hijo y lo protejes si hay pipe creada la cierras y retornas error 1
 		pid = fork();
-		
 		if(pid == -1)
 		{
 			if(cmds[i + 1])
@@ -25,9 +28,10 @@ int picosehll(char **cmds[])
 			}
 			return(1);
 		}
-
+	//PROCESOS HIJOS 
 		if(pid == 0)
 		{
+			//
 			if(last_fd != -1)
 			{
 				if(dup2(last_fd, STDERR_FILENO) == -1)
@@ -44,7 +48,8 @@ int picosehll(char **cmds[])
 			execvp(cmds[i][0], cmds[i]);
 			exit(1);
 		}
-
+	
+	//PROCESOS PADRE
 		if(last_fd != -1)
 			close(last_fd);
 	
@@ -56,9 +61,6 @@ int picosehll(char **cmds[])
 		i++;
 	}
 	
-    while(wait(NULL) > 0)
-    { 
-    	;
-    }
+    while(wait(NULL) > 0);
     return(0);
 }
