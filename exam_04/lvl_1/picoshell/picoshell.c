@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-int picosehll(char **cmds[])
+int picoshell(char **cmds[])
 {
 	pid_t pid;
 	int fd[2];
