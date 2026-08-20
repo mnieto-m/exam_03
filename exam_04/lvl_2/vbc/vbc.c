@@ -12,41 +12,42 @@ void error(char c)
 
 int ft_sum()
 {
-	int sum1 = ft_product();
-	int sum2 = 0;
+	int a;
 
-	while(*s == '+')
+	a = ft_mult();
+	while (*s == '+')
 	{
 		s++;
-		sum2 = ft_product();
-		sum1 = sum1 + sum2;
+		a += ft_mult();
 	}
-	return(sum1);
+	return (a);
 }
 int ft_product()
 {
-	int a = ft_factor();
-	int b = 0;
+	int c;
+
+	c = ft_factor();
 	while (*s == '*')
 	{
 		s++;
-		b = ft_factor();
-		a = a * b;
+		c *= ft_factor();
 	}
-	return(a);
+	return (c);
+
 }
 int ft_factor()
 {
 	int n = 0;
-	if(isdigit(*s))
-		return(*s++ - '0');
-	while(*s == '+')
+
+	if (isdigit(*s))
+		return (*s++ - '0');
+	if (*s == '(')
 	{
 		s++;
 		n = ft_sum();
 		s++;
 	}
-	return(n);
+	return (n);
 }
 int checker(char *str)
 {
@@ -63,7 +64,7 @@ int checker(char *str)
 		else if (!isdigit(str[i]) && str[i] != '+' && str[i] != '*' && str[i] != '(' && str[i] != ')')
 			return(error(str[i]), 1);
 		if(isdigit(str[i]) && isdigit(str[i + 1]))
-			return(error(str[i]), 1);
+			return(error(str[i + 1]), 1);
 		last = str[i];
 		i++;
 	}

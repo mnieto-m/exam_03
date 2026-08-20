@@ -17,6 +17,7 @@ int picosehll(char **cmds[])
 		if(cmds[i + 1] && pipe(fd))
 			return(1);
 		
+	//HIJO		
 		//Creas un proceso hijo y lo protejes si hay pipe creada la cierras y retornas error 1
 		pid = fork();
 		if(pid == -1)
@@ -28,36 +29,42 @@ int picosehll(char **cmds[])
 			}
 			return(1);
 		}
-	//PROCESOS HIJOS 
+		/* CONFIGURO FDS */
 		if(pid == 0)
 		{
-			//
+			/* RECIBO COMANDO ANTERIOR. */
 			if(last_fd != -1)
 			{
-				if(dup2(last_fd, STDERR_FILENO) == -1)
+				if(dup2(last_fd, STDIN_FILENO) == -1)
 					exit(1);
 				close(last_fd);
 			}
+			/* PREPARO SIGUIENTE COMANDO */
 			if(cmds[i + 1])
 			{
+			// CIERRO FD DE ENTRADA; CLONO DE SALIDA Y CIERRO EL ORIGINAL;
 				close(fd[0]);
 				if(dup2(fd[1], STDOUT_FILENO == -1))
 					exit(1);
 				close(fd[1]);
 			}
+			//EJECUTO
 			execvp(cmds[i][0], cmds[i]);
 			exit(1);
 		}
-	
-	//PROCESOS PADRE
+	//PADRE
+		// CIERRO LOS FDS ABIERTOS PARA LECTURA
 		if(last_fd != -1)
-			close(last_fd);
+				close(last_fd);
 	
+		/* Si existe un siguiente comando, conserva el extremo de lectura
+		 * para usarlo como entrada en la siguiente iteracion. */
 		if(cmds[i + 1])
 		{
 			close(fd[1]);
 			last_fd = fd[0];
 		}
+		//ITERO
 		i++;
 	}
 	
